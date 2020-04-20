@@ -14,8 +14,10 @@ MAXTIME=1
 
 function kill_bluetooth() {
     echo KILLING ALL BLUTOOTH 
-    sleep 60
-    read word
+    for ((i=0; i<${#BLUEDEVS[@]}; i++))
+        do
+            bluetoothctl disconnect ${BLUEDEVS[i]}
+        done
 }
 
 function get_bluetooth_ids() {
@@ -47,17 +49,12 @@ function mon_processes() {
 
 function main() {
     for (( i=0;i<60;i++ )) {
-        
         IFS=$' '
         get_bluetooth_ids
-        
         for ((i=0;i<${#PLIST[@]};i++)) 
             do
-                
                 mon_processes ${PLIST[i]}
-                
             done
-
         duration=$SECONDS
         echo "$(($duration / 60)) minutes and $(($duration % 60)) seconds elapsed."
         echo $PBOOL
